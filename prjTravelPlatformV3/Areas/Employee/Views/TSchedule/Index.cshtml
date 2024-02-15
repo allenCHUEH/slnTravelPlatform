@@ -1,7 +1,111 @@
-﻿
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+	ViewData["Title"] = "Index";
 }
 
-<h1>TSchedule</h1>
+@section Styles {
+	<link href="~/lib/datatables/css/jquery.datatables.css" rel="stylesheet" />
+	<style>
+		thead {
+			background-color: lightslategrey;
+			color: black;
+		}
+		/* 滑鼠懸停時的背景色 */
+		.hover-highlight {
+			background-color: #f0f0f0 !important; /* 更改為您想要的顏色 */
+		}
+	</style>
+}
 
+<div style="display: flex; justify-content: center; align-items: center;">
+	<div style="flex: 1;    margin-right: 20px;">
+		<h3>方案景點管理</h3>
+		<table class="table" id="tbplandes">
+			<thead>
+				<tr>
+					<th style="display: none">id</th>
+					<th>景點名稱</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div style="display: flex; flex-direction: column; align-items: center; margin-right: 20px;">
+		<button type="button" style="margin-bottom:20px">按鈕1</button>
+		<button type="button">按鈕2</button>
+	</div>
+
+	<div style="margin-right: 20px;">
+		<h3>景點清單</h3>
+		<table class="table" id="tbdeslist">
+			<thead>
+				<tr>
+					<th style="display: none">id</th>
+					<th>景點名稱</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+
+@section Scripts {
+
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+	<script src="//cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+	@* 景點清單 *@
+	<script>
+		const loadHotelDataDL = () => {
+			$("#tbdeslist").dataTable({
+				autoWidth: false,
+				ajax: {
+					type: 'GET',
+					url: "/api/TDestination/GetAllDestionation",
+					dataSrc: function (json) { return json; }
+				},
+				columns: [
+					{ "data": "fDestinationId", "visible": false },
+
+					{ "data": "fDestinationName" },
+
+				],
+				fixedHeader: { header: true },
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh-HANT.json'
+				},
+			})
+		}
+		$(document).ready(() => {
+			loadHotelDataDL();
+		})
+	</script>
+
+
+
+	@* 方案景點 *@
+	<script>
+		const loadHotelDataTD = () => {
+			$("#tbplandes").dataTable({
+				autoWidth: false,
+				ajax: {
+					type: 'GET',
+					url: "/api/TDestination/GetAllDestionation",
+					dataSrc: function (json) { return json; }
+				},
+				columns: [
+					{ "data": "fDestinationId", "visible": false },
+					{ "data": "fDestinationName" },
+				],
+				fixedHeader: { header: true },
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh-HANT.json'
+				},
+			})
+		}
+		$(document).ready(() => {
+			loadHotelDataTD();
+		})
+	</script>
+}

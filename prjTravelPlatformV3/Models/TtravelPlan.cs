@@ -27,7 +27,7 @@ public partial class TtravelPlan
 
     public int? Fstock { get; set; }
 
-    public bool? Fstate { get; set; }
+    public bool Fstate { get; set; }
 
     public virtual TtravelArea Farea { get; set; }
 

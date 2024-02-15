@@ -1,7 +1,99 @@
-﻿
+﻿@model IEnumerable<prjTravelPlatformV3.Models.TtravelPlan>
+
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>TravelPlan</h1>
+@section Styles {
+	<link href="~/lib/datatables/css/jquery.datatables.css" rel="stylesheet" />
+	<style>
+		thead {
+			background-color: lightslategrey;
+			color: black;
+		}
+		/* 滑鼠懸停時的背景色 */
+		.hover-highlight {
+			background-color: #f0f0f0 !important; /* 更改為您想要的顏色 */
+		}
+	</style>
+}
 
+<h3>方案管理</h3>
+<button id="t1" type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#hotelPartial" onclick="getEditPartial(0)"><i class="fa-solid fa-circle-plus" style="font-size:0.8rem"></i> 新增</button>
+<table class="table" id="tbplan">
+	<thead>
+		<tr>
+			<th style="display: none">id</th>
+			<th>狀態</th>
+			<th>方案名稱</th>
+			<th>方案類型</th>
+			<th>景點地區</th>
+			<th>天數(日)</th>
+			<th>交通</th>
+			<th>數量</th>
+			<th>價格(NT)</th>
+			<th style="width:50px">功能</th>
+		</tr>
+	</thead>
+</table>
+
+@section Scripts {
+
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+
+	<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+	<script src="//cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+	@* 方案管理 *@
+	<script>
+		const loadHotelDataT = () => {
+			$("#tbplan").dataTable({
+				autoWidth: false,
+				ajax: {
+					type: 'GET',
+					url: "/api/TDestination/GetAllTravelPlan",
+					dataSrc: function (json) { return json; }
+				},
+				columns: [
+					{ "data": "fTravelId", "visible": false },
+					{ "data": "fState" },
+					{ "data": "fTravelName" },
+					{ "data": "fType" },
+					{ "data": "fAreaName" },
+					{ "data": "fDay" },
+					{ "data": "fTransport" },
+					{ "data": "fStock" },
+					{ "data": "fPrice" },
+					{
+						data: null,
+						title: "功能",
+						render: function (data, type, row) {
+							return `<button id="t1" type = "button" class="btn btn-primary btn-sm me-1" data-bs-toggle="modal" data-bs-target="#hotelpartial" onclick="geteditpartial(${row.fDestinationid})"><i class="fa-solid fa-pen-to-square" style="font-size:0.8rem"></i> 編輯</button> ` +
+								'<button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash" style="font-size:0.8rem"></i>上架/下架</button>'
+						}
+					},
+				],
+				fixedHeader: { header: true },
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.7/i18n/zh-HANT.json'
+				},
+			})
+		}
+		$(document).ready(() => {
+			loadHotelDataT();
+
+			$('#tbplan tbody').on('click', 'tr', function () {
+				var data = $(this).closest('table').DataTable().row(this).data();
+				var fTravelId = data.fTravelId;
+			});
+			$('#tbplan tbody').on('mouseenter', 'tr', function () {
+				$(this).addClass('hover-highlight');
+			});
+			$('#tbplan tbody').on('mouseleave', 'tr', function () {
+				$(this).removeClass('hover-highlight');
+			});
+		});
+	</script>
+}

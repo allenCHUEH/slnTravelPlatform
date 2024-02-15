@@ -7,9 +7,9 @@ namespace prjTravelPlatformV3.Models;
 
 public partial class Tdestination
 {
-    public int Fid { get; set; }
+    public int Fid { get; set; } 
 
-    public string FdestinationId { get; set; }
+    public string FdestinationId { get; set; } 
 
     public string FdestinationName { get; set; }
 
@@ -23,7 +23,7 @@ public partial class Tdestination
 
     public int? Fstock { get; set; }
 
-    public bool? Fstate { get; set; }
+    public bool Fstate { get; set; }
 
     public string Faddress { get; set; }
 
